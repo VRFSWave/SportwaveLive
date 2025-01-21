@@ -3,121 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SPORTWAVE Games</title>
+    <title>Football Live Streams</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
             margin: 0;
-            background-color: #181818;
-            color: #f1f1f1;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
             padding: 0;
-            box-sizing: border-box;
         }
 
-        .navbar {
+        header {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1em;
+        }
+
+        main {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            padding: 20px;
-            background-color: rgba(0, 0, 0, 0.7);
-            z-index: 100;
+            padding: 2em;
         }
 
-        .logo {
-            width: 150px;
-            height: auto;
+        .game-list, .game-details {
+            width: 45%;
         }
 
-        .game-list-container {
-            margin-top: 100px;
-            padding: 40px 20px;
-            flex-grow: 1;
-            background-color: #181818;
-            text-align: center;
+        h2 {
+            color: #333;
         }
 
-        .game-card {
-            background-color: #333;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 30px;
-            display: inline-block;
-            width: 250px;
-            text-align: center;
-            transition: transform 0.3s ease;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+        ul {
+            list-style-type: none;
+            padding: 0;
         }
 
-        .game-card:hover {
-            transform: scale(1.05);
-        }
-
-        .game-card h3 {
-            font-size: 18px;
-            margin-bottom: 10px;
-        }
-
-        .game-card button {
-            padding: 10px 16px;
-            background-color: #e50914;
-            border: none;
-            color: white;
+        li {
+            background-color: #fff;
+            margin: 1em 0;
+            padding: 1em;
+            border: 1px solid #ddd;
             cursor: pointer;
-            border-radius: 4px;
         }
 
-        .game-card button:hover {
-            background-color: #b00710;
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1em;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
         }
     </style>
 </head>
 <body>
+    <header>
+        <h1>Football Live Streams</h1>
+    </header>
 
-    <!-- Navbar -->
-    <div class="navbar">
-        <img src="https://i.ibb.co/vj5yj2B/Wave.png" alt="SPORTWAVE Logo" class="logo">
-    </div>
+    <main>
+        <div class="game-list">
+            <h2>Live Games</h2>
+            <ul id="game-list">
+                <!-- List of live football games will be dynamically generated here -->
+            </ul>
+        </div>
 
-    <!-- Main Content -->
-    <div class="game-list-container" id="game-list-container">
-        <h1>Upcoming Games</h1>
-        <!-- Game cards will be displayed here -->
-    </div>
+        <div class="game-details">
+            <h2>Game Details</h2>
+            <div id="game-details">
+                <!-- Selected game stream will appear here -->
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Football Streaming</p>
+    </footer>
 
     <script>
-        // List of games with their names and live stream links
-        const games = [
-            { name: "Game 1", streamUrl: "https://example.com/stream1" },
-            { name: "Game 2", streamUrl: "https://example.com/stream2" },
-            { name: "Game 3", streamUrl: "https://example.com/stream3" },
-            { name: "Game 4", streamUrl: "https://example.com/stream4" },
-            // Add more games as needed
-        ];
+        document.addEventListener('DOMContentLoaded', function () {
+            const gameList = document.getElementById('game-list');
+            const gameDetails = document.getElementById('game-details');
 
-        const gameListContainer = document.getElementById("game-list-container");
+            // Fetch live football matches from Streamed.su API
+            fetch('https://streamed.su/api/matches/all-today/popular')
+                .then(response => response.json())
+                .then(data => {
+                    displayGames(data);
+                })
+                .catch(error => {
+                    console.error('Error fetching live games:', error);
+                });
 
-        // Function to create game cards
-        function displayGames() {
-            games.forEach(game => {
-                const gameCard = document.createElement("div");
-                gameCard.classList.add("game-card");
-                gameCard.innerHTML = `
-                    <h3>${game.name}</h3>
-                    <button onclick="window.location.href='${game.streamUrl}'">Watch Live</button>
-                `;
-                gameListContainer.appendChild(gameCard);
-            });
-        }
+            function displayGames(games) {
+                // Ensure the games exist
+                if (games && Array.isArray(games)) {
+                    games.forEach(game => {
+                        const listItem = document.createElement('li');
+                        listItem.textContent = `${game.home_team.name} vs ${game.away_team.name}`;
+                        
+                        // Add event listener to load stream when a game is clicked
+                        listItem.addEventListener('click', function () {
+                            displayGameDetails(game.id);  // Pass the game ID
+                        });
+                        
+                        gameList.appendChild(listItem);
+                    });
+                } else {
+                    gameList.innerHTML = '<li>No live games available at the moment.</li>';
+                }
+            }
 
-        // Display the games when the page loads
-        displayGames();
+            function displayGameDetails(gameId) {
+                // Fetch stream details for the selected game
+                fetch(`https://streamed.su/api/stream/alpha/${gameId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Check if stream URL is available
+                        if (data.stream_url) {
+                            const gameEmbed = document.createElement('iframe');
+                            gameEmbed.src = data.stream_url; // URL for the live game stream
+                            gameEmbed.width = '100%';
+                            gameEmbed.height = '500px';
+                            gameDetails.innerHTML = ''; // Clear previous details
+                            gameDetails.appendChild(gameEmbed);
+                        } else {
+                            gameDetails.innerHTML = '<p>Stream not available.</p>';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching stream details:', error);
+                        gameDetails.innerHTML = '<p>Could not load stream.</p>';
+                    });
+            }
+        });
     </script>
 </body>
 </html>
