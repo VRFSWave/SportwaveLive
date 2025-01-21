@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football Live Streams</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1em;
+        }
+
+        main {
+            display: flex;
+            justify-content: space-between;
+            padding: 2em;
+        }
+
+        .game-list, .game-details {
+            width: 45%;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: #fff;
+            margin: 1em 0;
+            padding: 1em;
+            border: 1px solid #ddd;
+            cursor: pointer;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1em;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Football Live Streams</h1>
+    </header>
+
+    <main>
+        <div class="game-list">
+            <h2>Live Games</h2>
+            <ul id="game-list">
+                <!-- List of live football games will be dynamically generated here -->
+            </ul>
+        </div>
+
+        <div class="game-details">
+            <h2>Game Details</h2>
+            <div id="game-details">
+                <!-- Selected game stream will appear here -->
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Football Streaming</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const gameList = document.getElementById('game-list');
+            const gameDetails = document.getElementById('game-details');
+
+            // Fetch live football matches from Streamed.su API
+            fetch('https://streamed.su/api/matches/all-today/popular')
+                .then(response => response.json())
+                .then(data => {
+                    displayGames(data);
+                })
+                .catch(error => {
+                    console.error('Error fetching live games:', error);
+                });
+
+            function displayGames(games) {
+                games.forEach(game => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `${game.home_team.name} vs ${game.away_team.name}`;
+                    
+                    // Add event listener to load stream when a game is clicked
+                    listItem.addEventListener('click', function () {
+                        displayGameDetails(game.id);
+                    });
+                    
+                    gameList.appendChild(listItem);
+                });
+            }
+
+            function displayGameDetails(gameId) {
+                // Fetch stream details for the selected game
+                fetch(`https://streamed.su/api/stream/alpha/${gameId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Check if stream URL is available
+                        if (data.stream_url) {
+                            const gameEmbed = document.createElement('iframe');
+                            gameEmbed.src = data.stream_url; // URL for the live game stream
+                            gameEmbed.width = '100%';
+                            gameEmbed.height = '500px';
+                            gameDetails.innerHTML = ''; // Clear previous details
+                            gameDetails.appendChild(gameEmbed);
+                        } else {
+                            gameDetails.innerHTML = '<p>Stream not available.</p>';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching stream details:', error);
+                        gameDetails.innerHTML = '<p>Could not load stream.</p>';
+                    });
+            }
+        });
+    </script>
+</body>
+</html>
