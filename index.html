@@ -220,31 +220,28 @@
                             return;
                         }
 
-                        // Add backup streams to the list and mark as backup
-                        backupStreams.forEach((backupStream, index) => {
-                            streams.push({ 
-                                name: backupStream.name,
-                                channel_id: backupStream.channel_id,
-                                isBackup: true
-                            });
-                        });
-
-                        // Populate the stream options list
+                        // Display streams from main sources
                         streams.forEach((stream, index) => {
                             const streamOption = document.createElement('div');
                             streamOption.className = 'stream-option';
 
-                            if (stream.isBackup) {
-                                streamOption.innerHTML = `
-                                    <button class="watch-button" onclick="showStream('${gameId}', '${stream.channel_id}', 'backup')">Backup Stream ${index + 1} - ${stream.name}</button>
-                                `;
-                            } else {
-                                streamOption.innerHTML = `
-                                    <button class="watch-button" onclick="showStream('${gameId}', '${index + 1}', '${stream.source}')">${stream.name} - Stream ${index + 1}</button>
-                                `;
-                            }
+                            streamOption.innerHTML = `
+                                <button class="watch-button" onclick="showStream('${gameId}', '${index + 1}', '${stream.source}')">${stream.name} - Stream ${index + 1}</button>
+                            `;
 
                             optionsContainer.appendChild(streamOption);
+                        });
+
+                        // Display backup streams as separate listings
+                        backupStreams.forEach((backupStream, index) => {
+                            const backupStreamOption = document.createElement('div');
+                            backupStreamOption.className = 'stream-option';
+
+                            backupStreamOption.innerHTML = `
+                                <button class="watch-button" onclick="showStream('${gameId}', '${backupStream.channel_id}', 'backup')">BACKUP - ${backupStream.name}</button>
+                            `;
+
+                            optionsContainer.appendChild(backupStreamOption);
                         });
 
                         streamOptionsDiv.style.display = 'block';
