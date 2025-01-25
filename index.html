@@ -81,9 +81,13 @@
                         const sources = ['alpha', 'bravo', 'charlie', 'delta', 'echo', 'foxtrot'];
                         let streams = [];
 
+                        // Fetch streams for each source and log the response
                         for (let source of sources) {
                             const response = await fetch(`https://streamed.su/api/stream/${source}/${gameId}`);
                             const data = await response.json();
+                            
+                            // Log the data to debug
+                            console.log(`Streams from source ${source}:`, data);
 
                             if (data && data.length > 0) {
                                 streams = data;
