@@ -155,11 +155,26 @@
     <script>
         async function fetchLiveGames() {
             try {
-                const response1 = await fetch('https://streamed.su/api/matches/all-today');
-                const response2 = await fetch('https://thedaddy.to/schedule/schedule-generated.json');
+                // Using a CORS proxy for the second API
+                const corsProxy = 'https://cors-anywhere.herokuapp.com/';
+                const url1 = 'https://streamed.su/api/matches/all-today';
+                const url2 = 'https://thedaddy.to/schedule/schedule-generated.json';
+
+                // Fetch data from both APIs
+                const response1 = await fetch(url1);
+                const response2 = await fetch(corsProxy + url2); // Add CORS proxy here
+
+                // Check if both requests are successful
+                if (!response1.ok || !response2.ok) {
+                    console.error('Failed to fetch data from one or both APIs:', response1, response2);
+                    return;
+                }
 
                 const games1 = await response1.json();
                 const games2 = await response2.json();
+
+                console.log('Games from streamed.su:', games1); // Debugging
+                console.log('Games from thedaddy.to:', games2); // Debugging
 
                 // Validate the structure of thedaddy API response
                 if (!Array.isArray(games2)) {
@@ -182,6 +197,11 @@
                 // Combine both game lists
                 const combinedGames = [...games1, ...games2Modified];
 
+                if (combinedGames.length === 0) {
+                    console.warn('No games found.');
+                    return;
+                }
+
                 const gamesContainer = document.getElementById('games-container');
                 const searchInput = document.getElementById('search-input');
                 const optionsContainer = document.getElementById('options-container');
@@ -195,7 +215,7 @@
                 displayGames(combinedGames);
 
                 searchInput.addEventListener('input', () => {
-                    const filteredGames = combinedGames.filter(game => 
+                    const filteredGames = combinedGames.filter(game =>
                         game.title.toLowerCase().includes(searchInput.value.toLowerCase())
                     );
                     displayGames(filteredGames);
