@@ -141,7 +141,7 @@
                             streamOption.className = 'stream-option';
 
                             streamOption.innerHTML = `
-                                <button class="watch-button" onclick="embedStream('${stream.embedurl}')">Stream ${index + 1}</button>
+                                <button class="watch-button" onclick="showStream('${gameId}', '${index + 1}')">Stream ${index + 1}</button>
                             `;
 
                             optionsContainer.appendChild(streamOption);
@@ -154,7 +154,8 @@
                     }
                 };
 
-                window.embedStream = (embedUrl) => {
+                window.showStream = (gameId, streamNo) => {
+                    const embedUrl = `https://embedme.top/embed/alpha/${gameId}/${streamNo}`;
                     streamFrame.src = embedUrl;
                     streamOptionsDiv.style.display = 'none';
                     liveStreamDiv.style.display = 'block';
