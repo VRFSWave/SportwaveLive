@@ -73,6 +73,11 @@
             margin: 0.5rem 0;
         }
 
+        .game .time {
+            color: #999999;
+            margin: 0.5rem 0;
+        }
+
         .watch-button {
             padding: 0.5rem 1rem;
             background-color: #e50914;
@@ -173,9 +178,12 @@
                         const gameDiv = document.createElement('div');
                         gameDiv.className = 'game';
 
+                        const gameDate = new Date(game.date);
+
                         gameDiv.innerHTML = `
                             <h3>${game.title}</h3>
-                            <p class="date">${new Date(game.date).toLocaleDateString()}</p>
+                            <p class="date">${gameDate.toLocaleDateString()}</p>
+                            <p class="time">${gameDate.toLocaleTimeString()}</p>
                             <button class="watch-button" onclick="fetchStreams('${game.id}')">Watch Now</button>
                         `;
 
