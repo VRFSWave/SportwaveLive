@@ -161,11 +161,23 @@
                 const games1 = await response1.json();
                 const games2 = await response2.json();
 
+                // Validate the structure of thedaddy API response
+                if (!Array.isArray(games2)) {
+                    console.error('Invalid response structure from thedaddy API');
+                    return;
+                }
+
                 // Add "backup" to the title of games from thedaddy.to
-                const games2Modified = games2.map(game => ({
-                    ...game,
-                    title: `${game.title} (Backup)`
-                }));
+                const games2Modified = games2.map(game => {
+                    if (!game.channel_id) {
+                        console.warn('Missing channel_id for game:', game);
+                        return null;
+                    }
+                    return {
+                        ...game,
+                        title: `${game.title} (Backup)`
+                    };
+                }).filter(game => game !== null);
 
                 // Combine both game lists
                 const combinedGames = [...games1, ...games2Modified];
