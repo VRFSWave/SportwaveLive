@@ -152,8 +152,11 @@
 
     <script>
         async function fetchLiveGames() {
+            const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+            const apiUrl = 'https://streamed.su/api/matches/all-today';
+
             try {
-                const response = await fetch('https://streamed.su/api/matches/all-today');
+                const response = await fetch(proxyUrl + apiUrl);
                 const games = await response.json();
 
                 const gamesContainer = document.getElementById('games-container');
@@ -195,60 +198,41 @@
                 }
 
                 window.fetchStreams = async (gameId) => {
-                    const sources = ['alpha', 'bravo', 'charlie', 'delta', 'echo', 'Foxtrot'];
-                    const streamOptionsDiv = document.getElementById('stream-options');
-                    const optionsContainer = document.getElementById('options-container');
-
-                    optionsContainer.innerHTML = '';  // Clear any previous options
-                    streamOptionsDiv.style.display = 'block';  // Show stream options
-                    document.getElementById('stream-options').scrollIntoView({ behavior: 'smooth' });
+                    const streamSources = ['alpha', 'bravo', 'charlie', 'delta', 'echo', 'Foxtrot'];
 
                     try {
-                        let streamsFound = false;
+                        optionsContainer.innerHTML = '';
 
-                        // Loop through the sources to fetch streams
-                        for (let source of sources) {
-                            const response = await fetch(`https://streamed.su/api/stream/${source}/${gameId}`);
-                            
-                            if (!response.ok) {
-                                console.error(`Failed to fetch streams from ${source}: ${response.status}`);
-                                continue;  // Skip this source if fetching fails
-                            }
-
+                        for (let source of streamSources) {
+                            const streamApiUrl = `https://streamed.su/api/stream/${source}/${gameId}`;
+                            const response = await fetch(proxyUrl + streamApiUrl);
                             const streams = await response.json();
 
-                            // Check if there are streams for this source
-                            if (streams && streams.length > 0) {
-                                streamsFound = true;
-                                streams.forEach((stream, index) => {
-                                    const streamOption = document.createElement('div');
-                                    streamOption.className = 'stream-option';
+                            streams.forEach((stream, index) => {
+                                const streamOption = document.createElement('div');
+                                streamOption.className = 'stream-option';
 
-                                    streamOption.innerHTML = `
-                                        <button class="watch-button" onclick="showStream('${source}', '${gameId}', '${index + 1}')">Stream ${source.toUpperCase()} ${index + 1}</button>
-                                    `;
-                                    optionsContainer.appendChild(streamOption);
-                                });
-                            }
+                                streamOption.innerHTML = `
+                                    <button class="watch-button" onclick="showStream('${source}', '${gameId}', '${index + 1}')">Stream ${index + 1} (${source})</button>
+                                `;
+
+                                optionsContainer.appendChild(streamOption);
+                            });
                         }
 
-                        // If no streams were found
-                        if (!streamsFound) {
-                            optionsContainer.innerHTML = '<p>No streams available for this game.</p>';
-                        }
+                        streamOptionsDiv.style.display = 'block';
+                        document.getElementById('stream-options').scrollIntoView({ behavior: 'smooth' });
+                        liveStreamDiv.style.display = 'none';
                     } catch (error) {
                         console.error('Error fetching streams:', error);
-                        optionsContainer.innerHTML = `<p>Error fetching streams: ${error.message}</p>`;
                     }
                 };
 
                 window.showStream = (source, gameId, streamNo) => {
                     const embedUrl = `https://embedme.top/embed/${source}/${gameId}/${streamNo}`;
-                    const streamFrame = document.getElementById('stream-frame');
                     streamFrame.src = embedUrl;
-
-                    document.getElementById('stream-options').style.display = 'none';  // Hide stream options
-                    document.getElementById('live-stream').style.display = 'block';  // Show the live stream
+                    streamOptionsDiv.style.display = 'none';
+                    liveStreamDiv.style.display = 'block';
                 };
 
             } catch (error) {
