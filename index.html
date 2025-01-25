@@ -129,7 +129,6 @@
 </head>
 <body>
     <header>
-        <img src="https://i.ibb.co/vj5yj2B/Wave.png" alt="SPORTWAVE Logo"/>
         <h1>SPORTWAVE - Live Sports</h1>
         <div id="search-container">
             <input type="text" id="search-input" placeholder="Search for a game...">
@@ -148,8 +147,7 @@
         </div>
     </main>
     <footer>
-        <p>&copy; Disclaimer- Our platform merely displays links to audiovisual content located on serv third parties and provider and/or transmitted by third parties. we DO NOT host nor transmit any audiovisual content itself and DO NOT control nor influence such content. We cannot accept any liability for the content transmitted by others. Any responsibility for this content lies with those who host or transmit it. We are not affiliated nor claim to be affiliated with any of the owners of streams and/or videos. All content is copyright of their respective owners.
-.</p>
+        <p>&copy; 2025 SPORTWAVE. All rights reserved.</p>
     </footer>
 
     <script>
@@ -197,36 +195,46 @@
                 }
 
                 window.fetchStreams = async (gameId) => {
+                    const sources = ['alpha', 'bravo', 'charlie', 'delta', 'echo', 'Foxtrot'];
+                    const streamOptionsDiv = document.getElementById('stream-options');
+                    const optionsContainer = document.getElementById('options-container');
+
+                    optionsContainer.innerHTML = '';  // Clear any previous options
+                    streamOptionsDiv.style.display = 'block';  // Show stream options
+                    document.getElementById('stream-options').scrollIntoView({ behavior: 'smooth' });
+
                     try {
-                        const response = await fetch(`https://streamed.su/api/stream/alpha/${gameId}`);
-                        const streams = await response.json();
+                        for (let source of sources) {
+                            const response = await fetch(`https://streamed.su/api/stream/${source}/${gameId}`);
+                            const streams = await response.json();
 
-                        optionsContainer.innerHTML = '';
+                            streams.forEach((stream, index) => {
+                                const streamOption = document.createElement('div');
+                                streamOption.className = 'stream-option';
 
-                        streams.forEach((stream, index) => {
-                            const streamOption = document.createElement('div');
-                            streamOption.className = 'stream-option';
+                                streamOption.innerHTML = `
+                                    <button class="watch-button" onclick="showStream('${source}', '${gameId}', '${index + 1}')">Stream ${source.toUpperCase()} ${index + 1}</button>
+                                `;
+                                optionsContainer.appendChild(streamOption);
+                            });
+                        }
 
-                            streamOption.innerHTML = `
-                                <button class="watch-button" onclick="showStream('${gameId}', '${index + 1}')">Stream ${index + 1}</button>
-                            `;
-
-                            optionsContainer.appendChild(streamOption);
-                        });
-
-                        streamOptionsDiv.style.display = 'block';
-                        document.getElementById('stream-options').scrollIntoView({ behavior: 'smooth' });
-                        liveStreamDiv.style.display = 'none';
+                        if (optionsContainer.childElementCount === 0) {
+                            optionsContainer.innerHTML = '<p>No streams available.</p>';
+                        }
                     } catch (error) {
                         console.error('Error fetching streams:', error);
+                        optionsContainer.innerHTML = '<p>Error fetching streams.</p>';
                     }
                 };
 
-                window.showStream = (gameId, streamNo) => {
-                    const embedUrl = `https://embedme.top/embed/alpha/${gameId}/${streamNo}`;
+                window.showStream = (source, gameId, streamNo) => {
+                    const embedUrl = `https://embedme.top/embed/${source}/${gameId}/${streamNo}`;
+                    const streamFrame = document.getElementById('stream-frame');
                     streamFrame.src = embedUrl;
-                    streamOptionsDiv.style.display = 'none';
-                    liveStreamDiv.style.display = 'block';
+
+                    document.getElementById('stream-options').style.display = 'none';  // Hide stream options
+                    document.getElementById('live-stream').style.display = 'block';  // Show the live stream
                 };
 
             } catch (error) {
