@@ -144,8 +144,11 @@
             try {
                 const response = await fetch('https://streamed.su/api/matches/all-today');
                 const games = await response.json();
+                console.log('Live games fetched:', games);  // Debugging line
+
                 const backupStreamsResponse = await fetch('https://thedaddy.to/schedule/schedule-generated.json');
                 const backupStreamsData = await backupStreamsResponse.json();
+                console.log('Backup streams fetched:', backupStreamsData);  // Debugging line
 
                 const gamesContainer = document.getElementById('games-container');
                 const searchInput = document.getElementById('search-input');
@@ -197,6 +200,8 @@
                         for (let source of sources) {
                             const response = await fetch(`https://streamed.su/api/stream/${source}/${gameId}`);
                             const data = await response.json();
+
+                            console.log(`Streams for source ${source}:`, data);  // Debugging line
 
                             // Check if streams exist for this source
                             if (data && Array.isArray(data) && data.length > 0) {
