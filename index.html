@@ -108,6 +108,7 @@
                             const streamOption = document.createElement('div');
                             streamOption.className = 'stream-option';
 
+                            // Ensure the correct stream number and source are passed to the showStream function
                             streamOption.innerHTML = `
                                 <button class="watch-button" onclick="showStream('${gameId}', '${index + 1}', '${streams[0].source}')">Stream ${index + 1}</button>
                             `;
@@ -124,6 +125,7 @@
                 };
 
                 window.showStream = (gameId, streamNo, source) => {
+                    // The stream URL format is dynamic based on the gameId and streamNo
                     const embedUrl = `https://embedme.top/embed/${source}/${gameId}/${streamNo}`;
                     streamFrame.src = embedUrl;
                     streamOptionsDiv.style.display = 'none';
