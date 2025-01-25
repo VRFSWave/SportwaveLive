@@ -5,115 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SPORTWAVE - Live Sports</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            margin: 0;
-            padding: 0;
-        }
-
-        header {
-            background-color: #141414;
-            color: #fff;
-            padding: 1rem;
-            text-align: center;
-        }
-
-        #search-container {
-            margin-top: 1rem;
-        }
-
-        #search-input {
-            padding: 0.5rem;
-            width: 300px;
-            font-size: 1rem;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-        }
-
-        main {
-            padding: 2rem;
-        }
-
-        #games-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .game {
-            background-color: #fff;
-            padding: 1rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s;
-        }
-
-        .game:hover {
-            transform: scale(1.05);
-        }
-
-        .game h3 {
-            margin: 0.5rem 0;
-        }
-
-        .game .date {
-            color: #cccccc;
-            margin: 0.5rem 0;
-        }
-
-        .game .time {
-            color: #999999;
-            margin: 0.5rem 0;
-        }
-
-        .watch-button {
-            padding: 0.5rem 1rem;
-            background-color: #e50914;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            text-align: center;
-            transition: background-color 0.3s;
-            margin-top: 1rem;
-        }
-
-        .watch-button:hover {
-            background-color: #db0810;
-        }
-
-        #stream-options {
-            margin: 1rem 0;
-            display: none;
-            text-align: center;
-        }
-
-        .stream-option {
-            margin: 0.5rem 0;
-        }
-
-        #live-stream {
-            margin-top: 2rem;
-            display: none;
-            text-align: center;
-        }
-
-        #live-stream iframe {
-            width: 80%;
-            height: 500px;
-            border: none;
-            border-radius: 8px;
-        }
-
-        footer {
-            text-align: center;
-            padding: 1rem;
-            background-color: #141414;
-            color: #fff;
-            margin-top: 2rem;
-            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
-        }
+        /* Your styles here */
     </style>
 </head>
 <body>
@@ -172,12 +64,12 @@
 
                         const gameDate = new Date(game.date);
 
-                        gameDiv.innerHTML = 
+                        gameDiv.innerHTML = `
                             <h3>${game.title}</h3>
                             <p class="date">${gameDate.toLocaleDateString()}</p>
                             <p class="time">${gameDate.toLocaleTimeString()}</p>
                             <button class="watch-button" onclick="fetchStreams('${game.id}')">Watch Now</button>
-                        ;
+                        `;
 
                         gamesContainer.appendChild(gameDiv);
                     });
@@ -185,38 +77,39 @@
 
                 window.fetchStreams = async (gameId) => {
                     try {
+                        // Stream sources in order of preference
                         const sources = ['alpha', 'bravo', 'charlie', 'delta', 'echo', 'foxtrot'];
                         let streams = [];
 
-                        // Clear previous stream options before fetching
-                        optionsContainer.innerHTML = '';
-
                         // Fetch streams for each source and log the response
                         for (let source of sources) {
-                            const response = await fetch(https://streamed.su/api/stream/${source}/${gameId});
+                            const response = await fetch(`https://streamed.su/api/stream/${source}/${gameId}`);
                             const data = await response.json();
+                            
+                            // Log the data to debug
+                            console.log(`Streams from source ${source}:`, data);
 
-                            // Check if streams exist for this source
-                            if (data && Array.isArray(data) && data.length > 0) {
-                                streams = streams.concat(data);  // Add the streams from this source to the streams array
+                            if (data && data.length > 0) {
+                                streams = data;
+                                break;
                             }
                         }
 
-                        // If no streams are found after checking all sources, show an alert or some message
+                        // If no streams are found, show an alert or some message
                         if (streams.length === 0) {
                             alert('No streams available for this game.');
                             return;
                         }
 
-                        // Populate the stream options list
+                        optionsContainer.innerHTML = '';
+
                         streams.forEach((stream, index) => {
                             const streamOption = document.createElement('div');
                             streamOption.className = 'stream-option';
 
-                            // Ensure the correct stream number and source are passed to the showStream function
-                            streamOption.innerHTML = 
-                                <button class="watch-button" onclick="showStream('${gameId}', '${index + 1}', '${stream.source}')">Stream ${index + 1}</button>
-                            ;
+                            streamOption.innerHTML = `
+                                <button class="watch-button" onclick="showStream('${gameId}', '${index + 1}', '${streams[0].source}')">Stream ${index + 1}</button>
+                            `;
 
                             optionsContainer.appendChild(streamOption);
                         });
@@ -224,59 +117,13 @@
                         streamOptionsDiv.style.display = 'block';
                         document.getElementById('stream-options').scrollIntoView({ behavior: 'smooth' });
                         liveStreamDiv.style.display = 'none';
-
-                        // Start polling to update the stream list every 10 seconds
-                        setInterval(() => {
-                            updateStreamList(gameId);
-                        }, 10000); // 10 seconds interval
                     } catch (error) {
                         console.error('Error fetching streams:', error);
                     }
                 };
 
-                async function updateStreamList(gameId) {
-                    try {
-                        const sources = ['alpha', 'bravo', 'charlie', 'delta', 'echo', 'foxtrot'];
-                        let streams = [];
-
-                        // Fetch streams for each source and log the response
-                        for (let source of sources) {
-                            const response = await fetch(https://streamed.su/api/stream/${source}/${gameId});
-                            const data = await response.json();
-
-                            // Check if streams exist for this source
-                            if (data && Array.isArray(data) && data.length > 0) {
-                                streams = streams.concat(data);  // Add the streams from this source to the streams array
-                            }
-                        }
-
-                        // If no streams are found, return without doing anything
-                        if (streams.length === 0) {
-                            return;
-                        }
-
-                        // Update the stream options list with the new streams
-                        optionsContainer.innerHTML = '';
-
-                        streams.forEach((stream, index) => {
-                            const streamOption = document.createElement('div');
-                            streamOption.className = 'stream-option';
-
-                            // Ensure the correct stream number and source are passed to the showStream function
-                            streamOption.innerHTML = 
-                                <button class="watch-button" onclick="showStream('${gameId}', '${index + 1}', '${stream.source}')">Stream ${index + 1}</button>
-                            ;
-
-                            optionsContainer.appendChild(streamOption);
-                        });
-                    } catch (error) {
-                        console.error('Error updating streams:', error);
-                    }
-                }
-
                 window.showStream = (gameId, streamNo, source) => {
-                    // The stream URL format is dynamic based on the gameId and streamNo
-                    const embedUrl = https://embedme.top/embed/${source}/${gameId}/${streamNo};
+                    const embedUrl = `https://embedme.top/embed/${source}/${gameId}/${streamNo}`;
                     streamFrame.src = embedUrl;
                     streamOptionsDiv.style.display = 'none';
                     liveStreamDiv.style.display = 'block';
