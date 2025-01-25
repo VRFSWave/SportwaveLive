@@ -6,7 +6,7 @@
     <title>SPORTWAVE - Live Sports</title>
     <style>
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
             background-color: #141414;
             color: #ffffff;
             margin: 0;
@@ -17,38 +17,7 @@
             background-color: #e50914;
             color: #fff;
             padding: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .search-container {
-            display: flex;
-            align-items: center;
-        }
-
-        .search-bar {
-            padding: 0.5rem;
-            font-size: 1rem;
-            border: none;
-            border-radius: 4px;
-            outline: none;
-            margin-right: 0.5rem;
-        }
-
-        .search-bar::placeholder {
-            color: #b3b3b3;
-        }
-
-        .search-button {
-            padding: 0.5rem 1rem;
-            font-size: 1rem;
-            background-color: #b81d24;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-            border-radius: 4px;
+            text-align: center;
         }
 
         main {
@@ -57,16 +26,37 @@
             margin: auto;
         }
 
+        #search-container {
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        #search-input {
+            padding: 0.5rem;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            width: 80%;
+            max-width: 400px;
+        }
+
+        #games-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
         .game {
             border: 1px solid #333;
             border-radius: 8px;
-            margin: 1rem 0;
+            margin: 1rem;
             padding: 1rem;
-            background-color: #1e1e1e;
+            background-color: #222;
+            width: calc(33% - 2rem);
+            text-align: center;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             display: flex;
+            flex-direction: column;
             justify-content: space-between;
-            align-items: center;
         }
 
         .game h3 {
@@ -85,7 +75,7 @@
         }
 
         .watch-button:hover {
-            background-color: #b81d24;
+            background-color: #db0810;
         }
 
         #stream-options {
@@ -114,7 +104,7 @@
         footer {
             text-align: center;
             padding: 1rem;
-            background-color: #e50914;
+            background-color: #141414;
             color: #fff;
             margin-top: 2rem;
             box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
@@ -123,10 +113,9 @@
 </head>
 <body>
     <header>
-        <h1>SPORTWAVE</h1>
-        <div class="search-container">
-            <input type="text" id="search-bar" class="search-bar" placeholder="Search for a game..." oninput="searchGames()">
-            <button class="search-button">Search</button>
+        <h1>SPORTWAVE - Live Sports</h1>
+        <div id="search-container">
+            <input type="text" id="search-input" placeholder="Search for a game...">
         </div>
     </header>
     <main>
@@ -152,7 +141,75 @@
                 const games = await response.json();
 
                 const gamesContainer = document.getElementById('games-container');
+                const searchInput = document.getElementById('search-input');
                 const optionsContainer = document.getElementById('options-container');
                 const streamOptionsDiv = document.getElementById('stream-options');
                 const liveStreamDiv = document.getElementById('live-stream');
-                const streamFrame = document.getElement
+                const streamFrame = document.getElementById('stream-frame');
+
+                displayGames(games);
+
+                searchInput.addEventListener('input', () => {
+                    const filteredGames = games.filter(game => 
+                        game.title.toLowerCase().includes(searchInput.value.toLowerCase())
+                    );
+                    displayGames(filteredGames);
+                });
+
+                function displayGames(games) {
+                    gamesContainer.innerHTML = '';
+                    games.forEach(game => {
+                        const gameDiv = document.createElement('div');
+                        gameDiv.className = 'game';
+
+                        gameDiv.innerHTML = `
+                            <h3>${game.title}</h3>
+                            <button class="watch-button" onclick="fetchStreams('${game.id}')">Watch Now</button>
+                        `;
+
+                        gamesContainer.appendChild(gameDiv);
+                    });
+                }
+
+                window.fetchStreams = async (gameId) => {
+                    try {
+                        const response = await fetch(`https://streamed.su/api/stream/alpha/${gameId}`);
+                        const streams = await response.json();
+
+                        optionsContainer.innerHTML = '';
+
+                        streams.forEach((stream, index) => {
+                            const streamOption = document.createElement('div');
+                            streamOption.className = 'stream-option';
+
+                            streamOption.innerHTML = `
+                                <button class="watch-button" onclick="showStream('${gameId}', '${index + 1}')">Stream ${index + 1}</button>
+                            `;
+
+                            optionsContainer.appendChild(streamOption);
+                        });
+
+                        streamOptionsDiv.style.display = 'block';
+                        document.getElementById('stream-options').scrollIntoView({ behavior: 'smooth' });
+                        liveStreamDiv.style.display = 'none';
+                    } catch (error) {
+                        console.error('Error fetching streams:', error);
+                    }
+                };
+
+                window.showStream = (gameId, streamNo) => {
+                    const embedUrl = `https://embedme.top/embed/alpha/${gameId}/${streamNo}`;
+                    streamFrame.src = embedUrl;
+                    streamOptionsDiv.style.display = 'none';
+                    liveStreamDiv.style.display = 'block';
+                };
+
+            } catch (error) {
+                console.error('Error fetching live games:', error);
+            }
+        }
+
+        fetchLiveGames();
+    </script>
+</body>
+</html>
