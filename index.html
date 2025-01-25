@@ -39,10 +39,17 @@
             max-width: 400px;
         }
 
-        #games-container {
+        #24-7-container, #games-container {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
+        }
+
+        .category-title {
+            width: 100%;
+            text-align: center;
+            font-size: 1.5rem;
+            margin-top: 2rem;
         }
 
         .game {
@@ -135,6 +142,11 @@
         </div>
     </header>
     <main>
+        <div class="category-title">24/7 Live TV</div>
+        <div id="24-7-container">
+            <!-- 24/7 Live TV games will be dynamically injected here -->
+        </div>
+        <div class="category-title">Live Events</div>
         <div id="games-container">
             <!-- Live games will be dynamically injected here -->
         </div>
@@ -157,6 +169,7 @@
                 const games = await response.json();
 
                 const gamesContainer = document.getElementById('games-container');
+                const liveTvContainer = document.getElementById('24-7-container');
                 const searchInput = document.getElementById('search-input');
                 const optionsContainer = document.getElementById('options-container');
                 const streamOptionsDiv = document.getElementById('stream-options');
@@ -177,6 +190,7 @@
 
                 function displayGames(games) {
                     gamesContainer.innerHTML = '';
+                    liveTvContainer.innerHTML = '';
                     games.forEach(game => {
                         const gameDiv = document.createElement('div');
                         gameDiv.className = 'game';
@@ -190,49 +204,7 @@
                             <button class="watch-button" onclick="fetchStreams('${game.id}')">Watch Now</button>
                         `;
 
-                        gamesContainer.appendChild(gameDiv);
-                    });
-                }
-
-                window.fetchStreams = async (gameId) => {
-                    try {
-                        const response = await fetch(`https://streamed.su/api/stream/alpha/${gameId}`);
-                        const streams = await response.json();
-
-                        optionsContainer.innerHTML = '';
-
-                        streams.forEach((stream, index) => {
-                            const streamOption = document.createElement('div');
-                            streamOption.className = 'stream-option';
-
-                            streamOption.innerHTML = `
-                                <button class="watch-button" onclick="showStream('${gameId}', '${index + 1}')">Stream ${index + 1}</button>
-                            `;
-
-                            optionsContainer.appendChild(streamOption);
-                        });
-
-                        streamOptionsDiv.style.display = 'block';
-                        document.getElementById('stream-options').scrollIntoView({ behavior: 'smooth' });
-                        liveStreamDiv.style.display = 'none';
-                    } catch (error) {
-                        console.error('Error fetching streams:', error);
-                    }
-                };
-
-                window.showStream = (gameId, streamNo) => {
-                    const embedUrl = `https://embedme.top/embed/alpha/${gameId}/${streamNo}`;
-                    streamFrame.src = embedUrl;
-                    streamOptionsDiv.style.display = 'none';
-                    liveStreamDiv.style.display = 'block';
-                };
-
-            } catch (error) {
-                console.error('Error fetching live games:', error);
-            }
-        }
-
-        fetchLiveGames();
-    </script>
-</body>
-</html>
+                        if (gameDate.getTime() === new Date('1970-01-01').getTime()) {
+                            liveTvContainer.appendChild(gameDiv);
+                        } else {
+                            gamesContainer.appendChild(gameDiv);
