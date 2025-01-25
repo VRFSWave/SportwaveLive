@@ -163,6 +163,9 @@
                 const liveStreamDiv = document.getElementById('live-stream');
                 const streamFrame = document.getElementById('stream-frame');
 
+                // Sort games by start time
+                games.sort((a, b) => new Date(a.date) - new Date(b.date));
+
                 displayGames(games);
 
                 searchInput.addEventListener('input', () => {
