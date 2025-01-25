@@ -152,11 +152,8 @@
 
     <script>
         async function fetchLiveGames() {
-            const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-            const apiUrl = 'https://streamed.su/api/matches/all-today';
-
             try {
-                const response = await fetch(proxyUrl + apiUrl);
+                const response = await fetch('https://streamed.su/api/matches/all-today');
                 const games = await response.json();
 
                 const gamesContainer = document.getElementById('games-container');
@@ -186,39 +183,34 @@
 
                         const gameDate = new Date(game.date);
 
-                        gameDiv.innerHTML = `
+                        gameDiv.innerHTML = 
                             <h3>${game.title}</h3>
                             <p class="date">${gameDate.toLocaleDateString()}</p>
                             <p class="time">${gameDate.toLocaleTimeString()}</p>
                             <button class="watch-button" onclick="fetchStreams('${game.id}')">Watch Now</button>
-                        `;
+                        ;
 
                         gamesContainer.appendChild(gameDiv);
                     });
                 }
 
                 window.fetchStreams = async (gameId) => {
-                    const streamSources = ['alpha', 'bravo', 'charlie', 'delta', 'echo', 'Foxtrot'];
-
                     try {
+                        const response = await fetch(https://streamed.su/api/stream/alpha/${gameId});
+                        const streams = await response.json();
+
                         optionsContainer.innerHTML = '';
 
-                        for (let source of streamSources) {
-                            const streamApiUrl = `https://streamed.su/api/stream/${source}/${gameId}`;
-                            const response = await fetch(proxyUrl + streamApiUrl);
-                            const streams = await response.json();
+                        streams.forEach((stream, index) => {
+                            const streamOption = document.createElement('div');
+                            streamOption.className = 'stream-option';
 
-                            streams.forEach((stream, index) => {
-                                const streamOption = document.createElement('div');
-                                streamOption.className = 'stream-option';
+                            streamOption.innerHTML = 
+                                <button class="watch-button" onclick="showStream('${gameId}', '${index + 1}')">Stream ${index + 1}</button>
+                            ;
 
-                                streamOption.innerHTML = `
-                                    <button class="watch-button" onclick="showStream('${source}', '${gameId}', '${index + 1}')">Stream ${index + 1} (${source})</button>
-                                `;
-
-                                optionsContainer.appendChild(streamOption);
-                            });
-                        }
+                            optionsContainer.appendChild(streamOption);
+                        });
 
                         streamOptionsDiv.style.display = 'block';
                         document.getElementById('stream-options').scrollIntoView({ behavior: 'smooth' });
@@ -228,8 +220,8 @@
                     }
                 };
 
-                window.showStream = (source, gameId, streamNo) => {
-                    const embedUrl = `https://embedme.top/embed/${source}/${gameId}/${streamNo}`;
+                window.showStream = (gameId, streamNo) => {
+                    const embedUrl = https://embedme.top/embed/alpha/${gameId}/${streamNo};
                     streamFrame.src = embedUrl;
                     streamOptionsDiv.style.display = 'none';
                     liveStreamDiv.style.display = 'block';
@@ -243,4 +235,3 @@
         fetchLiveGames();
     </script>
 </body>
-</html>
