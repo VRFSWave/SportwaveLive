@@ -244,7 +244,13 @@
             { name: "Sky Sports Arena", logo: "https://www.sportspro.com/wp-content/uploads/2023/04/Sky_Sports_Logo_September_2020-1.png", url: "https://thedaddy.to/embed/stream-36.php" },
             { name: "Sky Sports Action", logo: "https://www.sportspro.com/wp-content/uploads/2023/04/Sky_Sports_Logo_September_2020-1.png", url: "https://thedaddy.to/embed/stream-37.php" },
             { name: "Sky Sports Main Event", logo: "https://www.sportspro.com/wp-content/uploads/2023/04/Sky_Sports_Logo_September_2020-1.png", url: "https://thedaddy.to/embed/stream-38.php" },
-            { name: "Sky Sports Premier League", logo: "https://www.sportspro.com/wp-content/uploads/2023/04/Sky_Sports_Logo_September_2020-1.png", url: "https://thedaddy.to/embed/stream-130.php" }
+            { name: "Sky Sports Premier League", logo: "https://www.sportspro.com/wp-content/uploads/2023/04/Sky_Sports_Logo_September_2020-1.png", url: "https://thedaddy.to/embed/stream-130.php" },
+            { name: "TNT Sports 1", logo: "https://logos-world.net/wp-content/uploads/2022/12/TNT-Logo.png", url: "https://thedaddy.to/embed/stream-31.php" },
+            { name: "TNT Sports 2", logo: "https://logos-world.net/wp-content/uploads/2022/12/TNT-Logo.png", url: "https://thedaddy.to/embed/stream-32.php" },
+            { name: "TNT Sports 3", logo: "https://logos-world.net/wp-content/uploads/2022/12/TNT-Logo.png", url: "https://thedaddy.to/embed/stream-33.php" },
+            { name: "USA Network", logo: "https://i.ibb.co/vj5yj2B/Wave.png", url: "https://thedaddy.to/embed/stream-343.php" },
+            { name: "Premier Sports 1", logo: "https://i.ibb.co/vj5yj2B/Wave.png", url: "https://thedaddy.to/embed/stream-451.php" },
+            { name: "Premier Sports 2", logo: "https://i.ibb.co/vj5yj2B/Wave.png", url: "https://thedaddy.to/embed/stream-550.php" }
         ];
 
         function displayChannels() {
@@ -257,20 +263,22 @@
                 channelDiv.innerHTML = `
                     <img src="${logo}" alt="${channel.name}" class="${!channel.logo ? 'default-logo' : ''}">
                     <h3>${channel.name}</h3>
-                    <button class="watch-button" onclick="showStream('${channel.url}')">Watch Now</button>
+                    <a href="${channel.url}" target="_blank" class="watch-button">Watch Now</a>
                 `;
+
                 channelsList.appendChild(channelDiv);
             });
         }
 
         function toggleChannels() {
-            const channels = document.getElementById('channels-list');
-            const isVisible = channels.style.display === 'grid';
-            channels.style.display = isVisible ? 'none' : 'grid';
+            const channelsList = document.getElementById('channels-list');
+            channelsList.style.display = channelsList.style.display === 'none' ? 'block' : 'none';
+            if (channelsList.style.display === 'block') {
+                displayChannels();
+            }
         }
 
-        fetchLiveGames();  // Initialize live games fetch
-        displayChannels();  // Initialize 24/7 channels display
+        fetchLiveGames();
     </script>
 </body>
 </html>
