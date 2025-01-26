@@ -5,7 +5,127 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SPORTWAVE - Live Sports</title>
     <style>
-        /* styles here */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            color: #fff;
+        }
+
+        header {
+            background-color: #141414;
+            color: #fff;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        #search-container {
+            margin-top: 1rem;
+        }
+
+        #search-input {
+            padding: 0.5rem;
+            width: 300px;
+            font-size: 1rem;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            background-color: #222;
+            color: #fff;
+        }
+
+        #search-input::placeholder {
+            color: #aaa;
+        }
+
+        main {
+            padding: 2rem;
+            background-color: #222;
+        }
+
+        #games-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .game {
+            background-color: #333;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .game:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .game h3 {
+            margin: 0.5rem 0;
+            color: #f1f1f1;
+        }
+
+        .game .date {
+            color: #999;
+            margin: 0.5rem 0;
+        }
+
+        .game .time {
+            color: #ccc;
+            margin: 0.5rem 0;
+        }
+
+        .watch-button {
+            padding: 0.5rem 1rem;
+            background-color: #e50914;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: background-color 0.3s;
+            margin-top: 1rem;
+            width: 100%;
+            font-size: 1rem;
+        }
+
+        .watch-button:hover {
+            background-color: #db0810;
+        }
+
+        #stream-options {
+            margin: 1rem 0;
+            display: none;
+            text-align: center;
+        }
+
+        .stream-option {
+            margin: 0.5rem 0;
+        }
+
+        #live-stream {
+            margin-top: 2rem;
+            display: none;
+            text-align: center;
+        }
+
+        #live-stream iframe {
+            width: 80%;
+            height: 500px;
+            border: none;
+            border-radius: 8px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: #141414;
+            color: #fff;
+            margin-top: 2rem;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+        }
     </style>
 </head>
 <body>
@@ -35,19 +155,16 @@
         async function fetchLiveGames() {
             try {
                 const proxyUrl = 'https://api.allorigins.win/get?url=';  // CORS proxy URL
-                const targetUrl = encodeURIComponent('https://sportsonline.gl/prog.txt');
+                const targetUrl = encodeURIComponent('https://thedaddy.to/schedule/schedule-generated.json');
                 const response = await fetch(proxyUrl + targetUrl);
                 const data = await response.json();
-                const gamesData = data.contents.split("\n").map(line => {
-                    const parts = line.split(" | ");
-                    if (parts.length === 3) {
-                        return {
-                            time: parts[0].trim(),
-                            title: parts[1].trim(),
-                            link: parts[2].trim()
-                        };
-                    }
-                }).filter(game => game && game.title && game.link);
+                const gamesData = data.contents.map(game => {
+                    return {
+                        title: game.title,
+                        channels: game.channels.map(channel => channel.id),
+                        times: game.times
+                    };
+                }).filter(game => game.title && game.channels.length > 0);
 
                 const gamesContainer = document.getElementById('games-container');
                 const searchInput = document.getElementById('search-input');
@@ -71,38 +188,31 @@
                         const gameDiv = document.createElement('div');
                         gameDiv.className = 'game';
 
-                        gameDiv.innerHTML = `
-                            <h3>${game.title}</h3>
-                            <p class="time">${game.time}</p>
-                            <button class="watch-button" onclick="showStream('${game.link}', '${game.title}')">Watch Now</button>
-                        `;
+                        gameDiv.innerHTML = 
+                            `<h3>${game.title}</h3>
+                            <button class="watch-button" onclick="showStreamOptions('${game.title}', ${JSON.stringify(game.channels)})">Watch Now</button>`;
 
                         gamesContainer.appendChild(gameDiv);
                     });
                 }
 
-                window.showStream = (embedUrl, gameTitle) => {
-                    const sameTitleGames = gamesData.filter(game => game.title === gameTitle);
-                    
-                    if (sameTitleGames.length > 1) {
-                        let streamOptionsHtml = '';
-                        sameTitleGames.forEach((game, index) => {
-                            streamOptionsHtml += `
-                                <button class="watch-button" onclick="playStream('${game.link}')">Stream ${index + 1}</button>
-                            `;
-                        });
-                        document.getElementById('stream-options').innerHTML = streamOptionsHtml;
-                        document.getElementById('stream-options').style.display = 'block';
-                    } else {
-                        playStream(embedUrl);
-                    }
+                window.showStreamOptions = (gameTitle, channelIds) => {
+                    optionsContainer.innerHTML = '';
+                    streamOptionsDiv.style.display = 'block';
+                    channelIds.forEach(id => {
+                        const optionDiv = document.createElement('div');
+                        optionDiv.className = 'stream-option';
+                        optionDiv.innerHTML = `<button onclick="showStream(${id})">Channel ${id}</button>`;
+                        optionsContainer.appendChild(optionDiv);
+                    });
                 };
 
-                function playStream(embedUrl) {
+                window.showStream = (channelId) => {
+                    const embedUrl = `https://thedaddy.to/embed/stream-${channelId}.php`;
                     streamFrame.src = embedUrl;
-                    document.getElementById('stream-options').style.display = 'none';
+                    streamOptionsDiv.style.display = 'none';
                     liveStreamDiv.style.display = 'block';
-                }
+                };
 
             } catch (error) {
                 console.error('Error fetching live games:', error);
