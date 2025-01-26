@@ -49,7 +49,7 @@
             gap: 1.5rem;
         }
 
-        .game {
+        .game, .channel {
             background-color: #333;
             padding: 1rem;
             border-radius: 8px;
@@ -57,29 +57,24 @@
             transition: transform 0.3s;
         }
 
-        .game:hover {
+        .game:hover, .channel:hover {
             transform: scale(1.05);
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
         }
 
-        .game h3 {
+        .game h3, .channel h3 {
             margin: 0.5rem 0;
             color: #f1f1f1;
         }
 
-        .game .date {
+        .game .date, .game .time, .channel .channel-name {
             color: #999;
-            margin: 0.5rem 0;
-        }
-
-        .game .time {
-            color: #ccc;
             margin: 0.5rem 0;
         }
 
         .watch-button {
             padding: 0.5rem 1rem;
-            background-color: #e50914;
+            background-color: #007bff; /* Blue background */
             color: #fff;
             border: none;
             border-radius: 8px;
@@ -92,17 +87,7 @@
         }
 
         .watch-button:hover {
-            background-color: #db0810;
-        }
-
-        #stream-options {
-            margin: 1rem 0;
-            display: none;
-            text-align: center;
-        }
-
-        .stream-option {
-            margin: 0.5rem 0;
+            background-color: #0056b3; /* Darker blue on hover */
         }
 
         #live-stream {
@@ -127,33 +112,6 @@
             box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        #sports-channels {
-            margin-top: 2rem;
-            background-color: #333;
-            padding: 1rem;
-            border-radius: 8px;
-        }
-
-        #sports-channels h2 {
-            color: #fff;
-            text-align: center;
-        }
-
-        .channel {
-            background-color: #444;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .channel iframe {
-            width: 100%;
-            height: 400px;
-            border-radius: 8px;
-        }
     </style>
 </head>
 <body>
@@ -167,10 +125,6 @@
         <div id="games-container">
             <!-- Live games will be dynamically injected here -->
         </div>
-        <div id="stream-options">
-            <h3>Select a Stream:</h3>
-            <div id="options-container"></div>
-        </div>
         <div id="live-stream">
             <iframe id="stream-frame" allowfullscreen></iframe>
         </div>
@@ -179,67 +133,88 @@
         <div id="sports-channels">
             <h2>24/7 Sports Channels</h2>
             <div class="channel">
-                <iframe src="https://thedaddy.to/embed/stream-123.php" allowfullscreen></iframe>
+                <h3>Astro Grandstand</h3>
+                <button class="watch-button" onclick="showChannelStream('https://thedaddy.to/embed/stream-123.php')">Watch Now</button>
             </div>
             <div class="channel">
-                <iframe src="https://thedaddy.to/embed/stream-124.php" allowfullscreen></iframe>
+                <h3>Astro Football</h3>
+                <button class="watch-button" onclick="showChannelStream('https://thedaddy.to/embed/stream-124.php')">Watch Now</button>
             </div>
             <div class="channel">
-                <iframe src="https://thedaddy.to/embed/stream-125.php" allowfullscreen></iframe>
+                <h3>Astro Premier League</h3>
+                <button class="watch-button" onclick="showChannelStream('https://thedaddy.to/embed/stream-125.php')">Watch Now</button>
             </div>
             <div class="channel">
-                <iframe src="https://thedaddy.to/embed/stream-126.php" allowfullscreen></iframe>
+                <h3>Astro Premier League 2</h3>
+                <button class="watch-button" onclick="showChannelStream('https://thedaddy.to/embed/stream-126.php')">Watch Now</button>
             </div>
             <div class="channel">
-                <iframe src="https://thedaddy.to/embed/stream-356.php" allowfullscreen></iframe>
+                <h3>BBC 1</h3>
+                <button class="watch-button" onclick="showChannelStream('https://thedaddy.to/embed/stream-356.php')">Watch Now</button>
             </div>
             <div class="channel">
-                <iframe src="https://thedaddy.to/embed/stream-357.php" allowfullscreen></iframe>
+                <h3>BBC 2</h3>
+                <button class="watch-button" onclick="showChannelStream('https://thedaddy.to/embed/stream-357.php')">Watch Now</button>
             </div>
             <div class="channel">
-                <iframe src="https://thedaddy.to/embed/stream-61.php" allowfullscreen></iframe>
+                <h3>Bein Sports 1</h3>
+                <button class="watch-button" onclick="showChannelStream('https://thedaddy.to/embed/stream-61.php')">Watch Now</button>
             </div>
             <div class="channel">
-                <iframe src="https://thedaddy.to/embed/stream-92.php" allowfullscreen></iframe>
+                <h3>Bein Sports 2</h3>
+                <button class="watch-button" onclick="showChannelStream('https://thedaddy.to/embed/stream-92.php')">Watch Now</button>
             </div>
             <div class="channel">
-                <iframe src="https://thedaddy.to/embed/stream-350.php" allowfullscreen></iframe>
+                <h3>ITV 1</h3>
+                <button class="watch-button" onclick="showChannelStream('https://thedaddy.to/embed/stream-350.php')">Watch Now</button>
             </div>
             <div class="channel">
-                <iframe src="https://thedaddy.to/embed/stream-351.php" allowfullscreen></iframe>
+                <h3>ITV 2</h3>
+                <button class="watch-button" onclick="showChannelStream('https://thedaddy.to/embed/stream-351.php')">Watch Now</button>
             </div>
             <div class="channel">
-                <iframe src="https://thedaddy.to/embed/stream-35.php" allowfullscreen></iframe>
+                <h3>Sky Sports Football</h3>
+                <button class="watch-button" onclick="showChannelStream('https://thedaddy.to/embed/stream-35.php')">Watch Now</button>
             </div>
             <div class="channel">
-                <iframe src="https://thedaddy.to/embed/stream-36.php" allowfullscreen></iframe>
+                <h3>Sky Sports Arena</h3>
+                <button class="watch-button" onclick="showChannelStream('https://thedaddy.to/embed/stream-36.php')">Watch Now</button>
             </div>
             <div class="channel">
-                <iframe src="https://thedaddy.to/embed/stream-37.php" allowfullscreen></iframe>
+                <h3>Sky Sports Action</h3>
+                <button class="watch-button" onclick="showChannelStream('https://thedaddy.to/embed/stream-37.php')">Watch Now</button>
             </div>
             <div class="channel">
-                <iframe src="https://thedaddy.to/embed/stream-38.php" allowfullscreen></iframe>
+                <h3>Sky Sports Main Event</h3>
+                <button class="watch-button" onclick="showChannelStream('https://thedaddy.to/embed/stream-38.php')">Watch Now</button>
             </div>
             <div class="channel">
-                <iframe src="https://thedaddy.to/embed/stream-130.php" allowfullscreen></iframe>
+                <h3>Sky Sports Premier League</h3>
+                <button class="watch-button" onclick="showChannelStream('https://thedaddy.to/embed/stream-130.php')">Watch Now</button>
             </div>
             <div class="channel">
-                <iframe src="https://thedaddy.to/embed/stream-31.php" allowfullscreen></iframe>
+                <h3>TNT Sports 1</h3>
+                <button class="watch-button" onclick="showChannelStream('https://thedaddy.to/embed/stream-31.php')">Watch Now</button>
             </div>
             <div class="channel">
-                <iframe src="https://thedaddy.to/embed/stream-32.php" allowfullscreen></iframe>
+                <h3>TNT Sports 2</h3>
+                <button class="watch-button" onclick="showChannelStream('https://thedaddy.to/embed/stream-32.php')">Watch Now</button>
             </div>
             <div class="channel">
-                <iframe src="https://thedaddy.to/embed/stream-33.php" allowfullscreen></iframe>
+                <h3>TNT Sports 3</h3>
+                <button class="watch-button" onclick="showChannelStream('https://thedaddy.to/embed/stream-33.php')">Watch Now</button>
             </div>
             <div class="channel">
-                <iframe src="https://thedaddy.to/embed/stream-343.php" allowfullscreen></iframe>
+                <h3>USA Network</h3>
+                <button class="watch-button" onclick="showChannelStream('https://thedaddy.to/embed/stream-343.php')">Watch Now</button>
             </div>
             <div class="channel">
-                <iframe src="https://thedaddy.to/embed/stream-451.php" allowfullscreen></iframe>
+                <h3>Premier Sports 1</h3>
+                <button class="watch-button" onclick="showChannelStream('https://thedaddy.to/embed/stream-451.php')">Watch Now</button>
             </div>
             <div class="channel">
-                <iframe src="https://thedaddy.to/embed/stream-550.php" allowfullscreen></iframe>
+                <h3>Premier Sports 2</h3>
+                <button class="watch-button" onclick="showChannelStream('https://thedaddy.to/embed/stream-550.php')">Watch Now</button>
             </div>
         </div>
 
@@ -265,10 +240,6 @@
 
                 const gamesContainer = document.getElementById('games-container');
                 const searchInput = document.getElementById('search-input');
-                const optionsContainer = document.getElementById('options-container');
-                const streamOptionsDiv = document.getElementById('stream-options');
-                const liveStreamDiv = document.getElementById('live-stream');
-                const streamFrame = document.getElementById('stream-frame');
 
                 displayGames(gamesData);
 
@@ -280,29 +251,29 @@
                 });
 
                 function displayGames(games) {
-                    gamesContainer.innerHTML = '';
-                    games.forEach(game => {
-                        const gameDiv = document.createElement('div');
-                        gameDiv.className = 'game';
-
-                        gameDiv.innerHTML = `
-                            <h3>${game.title}</h3>
-                            <button class="watch-button" onclick="showStream('${game.link}')">Watch Now</button>
+                    gamesContainer.innerHTML = games.map(game => {
+                        return `
+                            <div class="game">
+                                <h3>${game.title}</h3>
+                                <a href="${game.link}" class="watch-button" target="_blank">Watch Now</a>
+                            </div>
                         `;
-
-                        gamesContainer.appendChild(gameDiv);
-                    });
+                    }).join('');
                 }
-
-                window.showStream = (embedUrl) => {
-                    streamFrame.src = embedUrl;
-                    streamOptionsDiv.style.display = 'none';
-                    liveStreamDiv.style.display = 'block';
-                };
-
             } catch (error) {
                 console.error('Error fetching live games:', error);
             }
+        }
+
+        // Automatically scroll to iframe when a channel is selected
+        function showChannelStream(url) {
+            const iframe = document.getElementById('stream-frame');
+            iframe.src = url;
+            document.getElementById('live-stream').style.display = 'block';
+            window.scrollTo({
+                top: document.getElementById('live-stream').offsetTop,
+                behavior: 'smooth'
+            });
         }
 
         fetchLiveGames();
