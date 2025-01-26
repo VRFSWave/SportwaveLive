@@ -67,11 +67,6 @@
             color: #f1f1f1;
         }
 
-        .game .date {
-            color: #999;
-            margin: 0.5rem 0;
-        }
-
         .game .time {
             color: #ccc;
             margin: 0.5rem 0;
@@ -159,12 +154,15 @@
                 const response = await fetch(proxyUrl + targetUrl);
                 const data = await response.json();
                 const gamesData = data.contents.split("\n").map(line => {
-                    const parts = line.split("|");
-                    return {
-                        title: parts[0],
-                        link: parts[1]
-                    };
-                }).filter(game => game.title && game.link);
+                    const parts = line.split(" | ");
+                    if (parts.length === 2) {
+                        return {
+                            time: parts[0].trim(),
+                            title: parts[1].trim(),
+                            link: parts[2].trim()
+                        };
+                    }
+                }).filter(game => game && game.title && game.link);
 
                 const gamesContainer = document.getElementById('games-container');
                 const searchInput = document.getElementById('search-input');
@@ -190,18 +188,36 @@
 
                         gameDiv.innerHTML = `
                             <h3>${game.title}</h3>
-                            <button class="watch-button" onclick="showStream('${game.link}')">Watch Now</button>
+                            <p class="time">${game.time}</p>
+                            <button class="watch-button" onclick="showStream('${game.link}', '${game.title}')">Watch Now</button>
                         `;
 
                         gamesContainer.appendChild(gameDiv);
                     });
                 }
 
-                window.showStream = (embedUrl) => {
-                    streamFrame.src = embedUrl;
-                    streamOptionsDiv.style.display = 'none';
-                    liveStreamDiv.style.display = 'block';
+                window.showStream = (embedUrl, gameTitle) => {
+                    const sameTitleGames = gamesData.filter(game => game.title === gameTitle);
+                    
+                    if (sameTitleGames.length > 1) {
+                        let streamOptionsHtml = '';
+                        sameTitleGames.forEach((game, index) => {
+                            streamOptionsHtml += `
+                                <button class="watch-button" onclick="playStream('${game.link}')">Stream ${index + 1}</button>
+                            `;
+                        });
+                        document.getElementById('stream-options').innerHTML = streamOptionsHtml;
+                        document.getElementById('stream-options').style.display = 'block';
+                    } else {
+                        playStream(embedUrl);
+                    }
                 };
+
+                function playStream(embedUrl) {
+                    streamFrame.src = embedUrl;
+                    document.getElementById('stream-options').style.display = 'none';
+                    liveStreamDiv.style.display = 'block';
+                }
 
             } catch (error) {
                 console.error('Error fetching live games:', error);
