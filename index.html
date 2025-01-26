@@ -188,10 +188,10 @@
                         const gameDiv = document.createElement('div');
                         gameDiv.className = 'game';
 
-                        gameDiv.innerHTML = 
+                        gameDiv.innerHTML = `
                             <h3>${game.title}</h3>
                             <button class="watch-button" onclick="showStream('${game.link}')">Watch Now</button>
-                        ;
+                        `;
 
                         gamesContainer.appendChild(gameDiv);
                     });
