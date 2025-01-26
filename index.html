@@ -29,6 +29,11 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
+        header img {
+            width: 100px; /* Logo size */
+            margin-bottom: 1rem;
+        }
+
         header h1 {
             font-size: 2.5rem;
             letter-spacing: 1px;
@@ -66,14 +71,14 @@
             background-color: #1a1a1a;
         }
 
-        #games-container, #sports-channels {
+        #games-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 2rem;
             margin-top: 2rem;
         }
 
-        .game, .channel {
+        .game {
             background-color: #222;
             border-radius: 12px;
             padding: 2rem;
@@ -81,25 +86,20 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
-        .game:hover, .channel:hover {
+        .game:hover {
             transform: translateY(-10px);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
         }
 
-        .game h3, .channel h3 {
+        .game h3 {
             font-size: 1.6rem;
             margin-bottom: 1rem;
             color: #f1f1f1;
         }
 
-        .game .date, .game .time, .channel .channel-name {
-            color: #888;
-            margin: 0.5rem 0;
-        }
-
         .watch-button {
             padding: 1rem 2rem;
-            background-color: #007bff; /* Blue for 24/7 Channels */
+            background-color: #007bff;
             color: #fff;
             border: none;
             border-radius: 50px;
@@ -116,23 +116,35 @@
             transform: scale(1.05);
         }
 
-        .standard-button {
-            padding: 1rem 2rem;
-            background-color: #e50914; /* Standard red background */
-            color: #fff;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            text-align: center;
-            font-size: 1.2rem;
-            width: 100%;
-            margin-top: 1.5rem;
-            transition: background-color 0.3s ease, transform 0.3s ease;
+        #sports-channels {
+            margin-top: 3rem;
         }
 
-        .standard-button:hover {
-            background-color: #db0810;
-            transform: scale(1.05);
+        .channel {
+            background-color: #222;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .channel:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .channel h3 {
+            font-size: 1.8rem;
+            color: #f1f1f1;
+        }
+
+        .channel .watch-button {
+            background-color: #007bff;  /* Blue for 24/7 Channels */
+        }
+
+        .channel .watch-button:hover {
+            background-color: #0056b3;
         }
 
         #live-stream {
@@ -161,7 +173,6 @@
             font-size: 0.9rem;
         }
 
-        /* Media Queries for Responsive Design */
         @media (max-width: 768px) {
             header h1 {
                 font-size: 2rem;
@@ -175,7 +186,7 @@
                 padding: 1.5rem;
             }
 
-            .watch-button, .standard-button {
+            .watch-button {
                 padding: 1rem 1.5rem;
             }
         }
@@ -184,6 +195,7 @@
 </head>
 <body>
     <header>
+        <img src="https://i.ibb.co/vj5yj2B/Wave.png" alt="Sportwave Logo">
         <h1>SPORTWAVE - Live Sports</h1>
         <div id="search-container">
             <input type="text" id="search-input" placeholder="Search for a game...">
@@ -200,8 +212,8 @@
         <!-- 24/7 Sports Channels Section -->
         <div id="sports-channels">
             <h2 style="color: #fff; font-size: 2rem; margin-bottom: 1rem;">24/7 Sports Channels</h2>
-            <button id="view-channels-button" class="standard-button" onclick="toggleChannels()">View Live 24/7 Channels</button>
-            <div id="channels-list">
+            <button id="view-channels-button" class="watch-button" onclick="toggleChannels()">View Live 24/7 Channels</button>
+            <div id="channels-list" style="display: none; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem;">
                 <div class="channel">
                     <h3>Astro Grandstand</h3>
                     <button class="watch-button" onclick="showStream('https://thedaddy.to/embed/stream-123.php')">Watch Now</button>
@@ -344,20 +356,15 @@
             const iframe = document.getElementById('stream-frame');
             iframe.src = url;
             document.getElementById('live-stream').style.display = 'block';
-            window.scrollTo({
-                top: document.getElementById('live-stream').offsetTop,
-                behavior: 'smooth'
-            });
         }
 
         function toggleChannels() {
-            const channelsList = document.getElementById('channels-list');
-            const viewButton = document.getElementById('view-channels-button');
-            channelsList.style.display = channelsList.style.display === 'none' ? 'grid' : 'none';
-            viewButton.textContent = channelsList.style.display === 'none' ? 'View Live 24/7 Channels' : 'Hide Live 24/7 Channels';
+            const channels = document.getElementById('channels-list');
+            const isVisible = channels.style.display === 'grid';
+            channels.style.display = isVisible ? 'none' : 'grid';
         }
 
-        fetchLiveGames();
+        fetchLiveGames();  // Initialize live games fetch
     </script>
 </body>
 </html>
