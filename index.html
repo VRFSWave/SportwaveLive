@@ -154,7 +154,7 @@
     <script>
         async function fetchLiveGames() {
             try {
-                const response = await fetch('https://cors-proxy.htmldriven.com/?url=https://streamed.su/api/matches/all-today');
+                const response = await fetch('https://api.allorigins.win/raw?url=https://streamed.su/api/matches/all-today');
                 const games = await response.json();
 
                 const gamesContainer = document.getElementById('games-container');
@@ -200,7 +200,7 @@
                         const allStreams = [];
 
                         for (let source of sourceArray) {
-                            const response = await fetch(`https://cors-proxy.htmldriven.com/?url=https://streamed.su/api/stream/${source}/${gameId}`);
+                            const response = await fetch(`https://api.allorigins.win/raw?url=https://streamed.su/api/stream/${source}/${gameId}`);
                             const data = await response.json();
 
                             if (data && data.length > 0) {
