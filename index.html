@@ -154,9 +154,14 @@
     <script>
         async function fetchLiveGames() {
             try {
-                const proxyUrl = 'https://api.allorigins.win/get?url=';  // CORS proxy URL
+                const proxyUrl = 'https://cors-anywhere.herokuapp.com/';  // Alternative CORS proxy
                 const targetUrl = encodeURIComponent('https://thedaddy.to/schedule/schedule-generated.json');
                 const response = await fetch(proxyUrl + targetUrl);
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch data from server: ' + response.status);
+                }
+
                 const data = await response.json();
                 const gamesData = data.contents.map(game => {
                     return {
