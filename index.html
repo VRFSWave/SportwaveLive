@@ -198,26 +198,27 @@
                 window.fetchStreams = async (gameId, sources) => {
                     try {
                         const sourceArray = sources.split(',');
-                        let streams = [];
+                        const allStreams = [];
 
                         for (let source of sourceArray) {
                             const response = await fetch(`https://streamed.su/api/stream/${source}/${gameId}`);
                             const data = await response.json();
 
                             if (data && data.length > 0) {
-                                streams = data;
-                                break; // Stop searching if a valid stream is found
+                                data.forEach(stream => {
+                                    allStreams.push({ ...stream, source });
+                                });
                             }
                         }
 
-                        if (streams.length === 0) {
+                        if (allStreams.length === 0) {
                             alert('No streams available for this game.');
                             return;
                         }
 
                         optionsContainer.innerHTML = '';
 
-                        streams.forEach((stream, index) => {
+                        allStreams.forEach((stream, index) => {
                             const streamOption = document.createElement('div');
                             streamOption.className = 'stream-option';
 
