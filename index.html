@@ -283,17 +283,21 @@
 
                         gameDiv.innerHTML = `
                             <h3>${game.title}</h3>
-                            <button class="watch-button" onclick="showStream('${game.link}')">Watch Now</button>
+                            <button class="watch-button" onclick="showGameStream('${game.link}')">Watch Now</button>
                         `;
 
                         gamesContainer.appendChild(gameDiv);
                     });
                 }
 
-                window.showStream = (embedUrl) => {
-                    streamFrame.src = embedUrl;
-                    streamOptionsDiv.style.display = 'none';
+                window.showGameStream = (embedUrl) => {
+                    const iframe = document.getElementById('stream-frame');
+                    iframe.src = embedUrl;
                     liveStreamDiv.style.display = 'block';
+                    window.scrollTo({
+                        top: liveStreamDiv.offsetTop,
+                        behavior: 'smooth'
+                    });
                 };
 
             } catch (error) {
