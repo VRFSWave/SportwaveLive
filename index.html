@@ -151,7 +151,7 @@
         <div id="sports-channels">
             <h2>24/7 Sports Channels</h2>
             <button id="view-channels-button" class="standard-button" onclick="toggleChannels()">View Live 24/7 Channels</button>
-            <div id="channels-list" style="display: none;">
+            <div id="channels-list">
                 <div class="channel">
                     <h3>Astro Grandstand</h3>
                     <button class="watch-button" onclick="showStream('https://thedaddy.to/embed/stream-123.php')">Watch Now</button>
@@ -160,7 +160,82 @@
                     <h3>Astro Football</h3>
                     <button class="watch-button" onclick="showStream('https://thedaddy.to/embed/stream-124.php')">Watch Now</button>
                 </div>
-                <!-- Add more channels here -->
+                <div class="channel">
+                    <h3>Astro Premier League</h3>
+                    <button class="watch-button" onclick="showStream('https://thedaddy.to/embed/stream-125.php')">Watch Now</button>
+                </div>
+                <div class="channel">
+                    <h3>Astro Premier League 2</h3>
+                    <button class="watch-button" onclick="showStream('https://thedaddy.to/embed/stream-126.php')">Watch Now</button>
+                </div>
+                <div class="channel">
+                    <h3>BBC 1</h3>
+                    <button class="watch-button" onclick="showStream('https://thedaddy.to/embed/stream-356.php')">Watch Now</button>
+                </div>
+                <div class="channel">
+                    <h3>BBC 2</h3>
+                    <button class="watch-button" onclick="showStream('https://thedaddy.to/embed/stream-357.php')">Watch Now</button>
+                </div>
+                <div class="channel">
+                    <h3>Bein Sports 1</h3>
+                    <button class="watch-button" onclick="showStream('https://thedaddy.to/embed/stream-61.php')">Watch Now</button>
+                </div>
+                <div class="channel">
+                    <h3>Bein Sports 2</h3>
+                    <button class="watch-button" onclick="showStream('https://thedaddy.to/embed/stream-92.php')">Watch Now</button>
+                </div>
+                <div class="channel">
+                    <h3>ITV 1</h3>
+                    <button class="watch-button" onclick="showStream('https://thedaddy.to/embed/stream-350.php')">Watch Now</button>
+                </div>
+                <div class="channel">
+                    <h3>ITV 2</h3>
+                    <button class="watch-button" onclick="showStream('https://thedaddy.to/embed/stream-351.php')">Watch Now</button>
+                </div>
+                <div class="channel">
+                    <h3>Sky Sports Football</h3>
+                    <button class="watch-button" onclick="showStream('https://thedaddy.to/embed/stream-35.php')">Watch Now</button>
+                </div>
+                <div class="channel">
+                    <h3>Sky Sports Arena</h3>
+                    <button class="watch-button" onclick="showStream('https://thedaddy.to/embed/stream-36.php')">Watch Now</button>
+                </div>
+                <div class="channel">
+                    <h3>Sky Sports Action</h3>
+                    <button class="watch-button" onclick="showStream('https://thedaddy.to/embed/stream-37.php')">Watch Now</button>
+                </div>
+                <div class="channel">
+                    <h3>Sky Sports Main Event</h3>
+                    <button class="watch-button" onclick="showStream('https://thedaddy.to/embed/stream-38.php')">Watch Now</button>
+                </div>
+                <div class="channel">
+                    <h3>Sky Sports Premier League</h3>
+                    <button class="watch-button" onclick="showStream('https://thedaddy.to/embed/stream-130.php')">Watch Now</button>
+                </div>
+                <div class="channel">
+                    <h3>TNT Sports 1</h3>
+                    <button class="watch-button" onclick="showStream('https://thedaddy.to/embed/stream-31.php')">Watch Now</button>
+                </div>
+                <div class="channel">
+                    <h3>TNT Sports 2</h3>
+                    <button class="watch-button" onclick="showStream('https://thedaddy.to/embed/stream-32.php')">Watch Now</button>
+                </div>
+                <div class="channel">
+                    <h3>TNT Sports 3</h3>
+                    <button class="watch-button" onclick="showStream('https://thedaddy.to/embed/stream-33.php')">Watch Now</button>
+                </div>
+                <div class="channel">
+                    <h3>USA Network</h3>
+                    <button class="watch-button" onclick="showStream('https://thedaddy.to/embed/stream-343.php')">Watch Now</button>
+                </div>
+                <div class="channel">
+                    <h3>Premier Sports 1</h3>
+                    <button class="watch-button" onclick="showStream('https://thedaddy.to/embed/stream-451.php')">Watch Now</button>
+                </div>
+                <div class="channel">
+                    <h3>Premier Sports 2</h3>
+                    <button class="watch-button" onclick="showStream('https://thedaddy.to/embed/stream-550.php')">Watch Now</button>
+                </div>
             </div>
         </div>
     </main>
@@ -228,7 +303,7 @@
         function toggleChannels() {
             const channelsList = document.getElementById('channels-list');
             const viewButton = document.getElementById('view-channels-button');
-            channelsList.style.display = channelsList.style.display === 'none' ? 'block' : 'none';
+            channelsList.style.display = channelsList.style.display === 'none' ? 'grid' : 'none';
             viewButton.textContent = channelsList.style.display === 'none' ? 'View Live 24/7 Channels' : 'Hide Live 24/7 Channels';
         }
 
