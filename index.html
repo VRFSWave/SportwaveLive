@@ -88,18 +88,11 @@
             margin-top: 1rem;
             width: 100%;
             font-size: 1rem;
-        }
-
-        .watch-button:hover {
             background-color: #db0810;
         }
 
-        .blue-button {
-            background-color: #007bff;
-        }
-
-        .blue-button:hover {
-            background-color: #0056b3;
+        .watch-button:hover {
+            background-color: #c3030e;
         }
 
         #stream-options {
@@ -285,13 +278,13 @@
             { name: "Astro Premier League 2", logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPWMyI7Vn6Aba4vLqAE5V8A_1jBJdCwA6RCA&s", url: "https://thedaddy.to/embed/stream-126.php", isBlue: true },
             { name: "BBC 1", logo: "https://logos-world.net/wp-content/uploads/2022/01/BBC-Logo.png", url: "https://thedaddy.to/embed/stream-356.php" },
             { name: "BBC 2", logo: "https://logos-world.net/wp-content/uploads/2022/01/BBC-Logo.png", url: "https://thedaddy.to/embed/stream-357.php" },
-            { name: "Bein Sports 1", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Bein_sport_logo.png/2560px-Bein_sport_logo.png", url: "https://thedaddy.to/embed/stream-61.php" },
-            { name: "Bein Sports 2", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Bein_sport_logo.png/2560px-Bein_sport_logo.png", url: "https://thedaddy.to/embed/stream-92.php" },
-            { name: "ITV 1", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Itv2024.svg/1200px-Itv2024.svg.png", url: "https://thedaddy.to/embed/stream-350.php" },
-            { name: "ITV 2", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Itv2024.svg/1200px-Itv2024.svg.png", url: "https://thedaddy.to/embed/stream-351.php" },
-            { name: "Sky Sports Football", logo: "https://www.sportspro.com/wp-content/uploads/2023/04/Sky_Sports_Logo_September_2020-1.png", url: "https://thedaddy.to/embed/stream-35.php" },
-            { name: "Sky Sports Arena", logo: "https://www.sportspro.com/wp-content/uploads/2023/04/Sky_Sports_Logo_September_2020-1.png", url: "https://thedaddy.to/embed/stream-36.php" },
-            { name: "Sky Sports Action", logo: "https://www.sportspro.com/wp-content/uploads/2023/04/Sky_Sports_Logo_September_2020-1.png", url: "https://thedaddy.to/embed/stream-37.php" },
+            { name: "Bein Sports 1", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Bein_sport_logo.png/2560px-Bein_sport_logo.png", url: "https://thedaddy.to/embed/stream-171.php" },
+            { name: "Bein Sports 2", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Bein_sport_logo.png/2560px-Bein_sport_logo.png", url: "https://thedaddy.to/embed/stream-172.php" },
+            { name: "ITV 1", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Itv2024.svg/1200px-Itv2024.svg.png", url: "https://thedaddy.to/embed/stream-276.php" },
+            { name: "ITV 2", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Itv2024.svg/1200px-Itv2024.svg.png", url: "https://thedaddy.to/embed/stream-277.php" },
+            { name: "Sky Sports Football", logo: "https://www.sportspro.com/wp-content/uploads/2023/04/Sky_Sports_Logo_September_2020-1.png", url: "https://thedaddy.to/embed/stream-30.php" },
+            { name: "Sky Sports Arena", logo: "https://www.sportspro.com/wp-content/uploads/2023/04/Sky_Sports_Logo_September_2020-1.png", url: "https://thedaddy.to/embed/stream-31.php" },
+            { name: "Sky Sports Action", logo: "https://www.sportspro.com/wp-content/uploads/2023/04/Sky_Sports_Logo_September_2020-1.png", url: "https://thedaddy.to/embed/stream-32.php" },
             { name: "Sky Sports Main Event", logo: "https://www.sportspro.com/wp-content/uploads/2023/04/Sky_Sports_Logo_September_2020-1.png", url: "https://thedaddy.to/embed/stream-38.php" },
             { name: "Sky Sports Premier League", logo: "https://www.sportspro.com/wp-content/uploads/2023/04/Sky_Sports_Logo_September_2020-1.png", url: "https://thedaddy.to/embed/stream-39.php" },
             { name: "TNT Sports 1", logo: "https://logos-world.net/wp-content/uploads/2022/12/TNT-Logo.png", url: "https://thedaddy.to/embed/stream-31.php" },
@@ -313,7 +306,7 @@
                 channelDiv.innerHTML = `
                     <img src="${channel.logo}" alt="${channel.name}" class="channel-logo">
                     <h3>${channel.name}</h3>
-                    <iframe src="${channel.url}" frameborder="0" allowfullscreen></iframe>
+                    <button class="watch-button" onclick="showStream('${channel.url}')">Watch Now</button>
                 `;
 
                 channelsList.appendChild(channelDiv);
