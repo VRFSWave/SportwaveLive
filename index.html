@@ -154,7 +154,7 @@
     <script>
         async function fetchLiveGames() {
             try {
-                const proxyUrl = 'https://cors-anywhere.herokuapp.com/';  // Alternative CORS proxy
+                const proxyUrl = 'https://thingproxy.freeboard.io/fetch/';  // Alternative CORS proxy
                 const targetUrl = encodeURIComponent('https://thedaddy.to/schedule/schedule-generated.json');
                 const response = await fetch(proxyUrl + targetUrl);
 
