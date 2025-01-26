@@ -154,9 +154,11 @@
     <script>
         async function fetchLiveGames() {
             try {
-                const response = await fetch('https://vivosoccer.xyz/spo/schedule/');
-                const textData = await response.text();
-                const gamesData = textData.split("\n")
+                const proxyUrl = 'https://api.allorigins.win/get?url=';  // CORS proxy URL
+                const targetUrl = encodeURIComponent('https://vivosoccer.xyz/spo/schedule/');
+                const response = await fetch(proxyUrl + targetUrl);
+                const data = await response.json();
+                const gamesData = data.contents.split("\n")
                     .map(line => {
                         const parts = line.split(" | ");
                         return {
