@@ -182,6 +182,21 @@
         .channel-card .watch-button {
             width: 100%;
         }
+
+        /* Style for the backup stream button and image */
+        .backup-stream {
+            margin-top: 2rem;
+            display: grid;
+            place-items: center;
+        }
+
+        .backup-stream img {
+            width: 100%;
+            height: 250px;
+            object-fit: contain;
+            border-radius: 8px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -206,6 +221,13 @@
         </div>
         <div id="live-stream">
             <iframe id="stream-frame" allowfullscreen></iframe>
+        </div>
+
+        <!-- Backup Stream Section -->
+        <div class="backup-stream">
+            <a href="https://vrfswave.github.io/WaveFlix/" target="_blank">
+                <img src="https://drive.google.com/uc?id=1rKoacHpaOE-wV-RByh19XHNopk7lsN5d" alt="Backup Stream Image">
+            </a>
         </div>
     </main>
     <footer>
