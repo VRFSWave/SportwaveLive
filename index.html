@@ -72,11 +72,6 @@
             color: #f1f1f1;
         }
 
-        .game .date, .game .time {
-            color: #999;
-            margin: 0.5rem 0;
-        }
-
         .watch-button {
             padding: 0.5rem 1rem;
             color: #fff;
@@ -95,16 +90,6 @@
             background-color: #c3030e;
         }
 
-        #stream-options {
-            margin: 1rem 0;
-            display: none;
-            text-align: center;
-        }
-
-        .stream-option {
-            margin: 0.5rem 0;
-        }
-
         #live-stream {
             margin-top: 2rem;
             display: none;
@@ -118,6 +103,42 @@
             border-radius: 8px;
         }
 
+        .backup-button {
+            display: block;
+            text-align: center;
+            background-color: #db0810;
+            color: white;
+            padding: 10px 20px;
+            margin: 20px auto;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            text-decoration: none;
+            width: 300px;
+            transition: background-color 0.3s;
+        }
+
+        .backup-button:hover {
+            background-color: #c3030e;
+        }
+
+        .backup-stream {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .backup-stream img {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 8px;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .backup-stream img:hover {
+            transform: scale(1.05);
+        }
+
         footer {
             text-align: center;
             padding: 1rem;
@@ -125,77 +146,6 @@
             color: #fff;
             margin-top: 2rem;
             box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .channel img {
-            width: 100%;
-            height: auto;
-            max-height: 150px;
-            border-radius: 8px;
-            object-fit: contain;
-        }
-
-        .default-logo {
-            width: 100%;
-            height: 100px;
-            object-fit: contain;
-        }
-
-        .channel iframe {
-            width: 100%;
-            height: 300px;
-            border: none;
-            border-radius: 8px;
-        }
-
-        /* Grid style for channels */
-        .channel-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .channel-card {
-            background-color: #333;
-            padding: 1rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s;
-        }
-
-        .channel-card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        .channel-card img {
-            width: 100%;
-            height: 100px;
-            object-fit: contain;
-            margin-bottom: 1rem;
-        }
-
-        .channel-card h3 {
-            margin-bottom: 1rem;
-        }
-
-        .channel-card .watch-button {
-            width: 100%;
-        }
-
-        /* Style for the backup stream button and image */
-        .backup-stream {
-            margin-top: 2rem;
-            display: grid;
-            place-items: center;
-        }
-
-        .backup-stream img {
-            width: 100%;
-            height: 250px;
-            object-fit: contain;
-            border-radius: 8px;
-            cursor: pointer;
         }
     </style>
 </head>
@@ -207,29 +157,34 @@
             <input type="text" id="search-input" placeholder="Search for a game...">
         </div>
     </header>
+    
     <main>
         <div id="games-container">
             <!-- Live games will be dynamically injected here -->
         </div>
+
         <button class="watch-button" onclick="toggleChannels()">View 24/7 Live Channels</button>
         <div id="channels-list" style="display: none;">
             <!-- 24/7 channels will be dynamically injected here -->
         </div>
-        <div id="stream-options">
-            <h3>Select a Stream:</h3>
-            <div id="options-container"></div>
-        </div>
+
         <div id="live-stream">
             <iframe id="stream-frame" allowfullscreen></iframe>
         </div>
 
-        <!-- Backup Stream Section -->
+        <!-- Backup Stream Button -->
+        <a href="https://vrfswave.github.io/Backup-Stream/" class="backup-button" target="_blank">
+            Backup Stream (check Discord for game)
+        </a>
+
+        <!-- Sportwave Movies Image -->
         <div class="backup-stream">
             <a href="https://vrfswave.github.io/WaveFlix/" target="_blank">
-                <img src="https://drive.google.com/uc?id=1rKoacHpaOE-wV-RByh19XHNopk7lsN5d" alt="Backup Stream Image">
+                <img src="https://i.ibb.co/vCKVW6s9/Sportwave-Movies.gif" alt="Sportwave Movies">
             </a>
         </div>
     </main>
+
     <footer>
         <p>&copy; 2025 SPORTWAVE. All rights reserved.</p>
     </footer>
@@ -237,16 +192,13 @@
     <script>
         async function fetchLiveGames() {
             try {
-                const proxyUrl = 'https://api.allorigins.win/get?url=';  // CORS proxy URL
+                const proxyUrl = 'https://api.allorigins.win/get?url=';
                 const targetUrl = encodeURIComponent('https://sportsonline.gl/prog.txt');
                 const response = await fetch(proxyUrl + targetUrl);
                 const data = await response.json();
                 const gamesData = data.contents.split("\n").map(line => {
                     const parts = line.split("|");
-                    return {
-                        title: parts[0],
-                        link: parts[1]
-                    };
+                    return { title: parts[0], link: parts[1] };
                 }).filter(game => game.title && game.link);
 
                 const gamesContainer = document.getElementById('games-container');
@@ -280,66 +232,11 @@
                     const iframe = document.getElementById('stream-frame');
                     iframe.src = embedUrl;
                     document.getElementById('live-stream').style.display = 'block';
-
-                    // Smooth scroll to the live stream section
-                    document.getElementById('live-stream').scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
+                    document.getElementById('live-stream').scrollIntoView({ behavior: 'smooth', block: 'start' });
                 };
 
             } catch (error) {
                 console.error('Error fetching live games:', error);
-            }
-        }
-
-        const channels = [
-            { name: "Astro Grandstand", logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPWMyI7Vn6Aba4vLqAE5V8A_1jBJdCwA6RCA&s", url: "https://thedaddy.to/embed/stream-123.php", isBlue: true },
-            { name: "Astro Football", logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPWMyI7Vn6Aba4vLqAE5V8A_1jBJdCwA6RCA&s", url: "https://thedaddy.to/embed/stream-124.php", isBlue: true },
-            { name: "Astro Premier League", logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPWMyI7Vn6Aba4vLqAE5V8A_1jBJdCwA6RCA&s", url: "https://thedaddy.to/embed/stream-125.php", isBlue: true },
-            { name: "Astro Premier League 2", logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPWMyI7Vn6Aba4vLqAE5V8A_1jBJdCwA6RCA&s", url: "https://thedaddy.to/embed/stream-126.php", isBlue: true },
-            { name: "BBC 1", logo: "https://logos-world.net/wp-content/uploads/2022/01/BBC-Logo.png", url: "https://thedaddy.to/embed/stream-356.php" },
-            { name: "BBC 2", logo: "https://logos-world.net/wp-content/uploads/2022/01/BBC-Logo.png", url: "https://thedaddy.to/embed/stream-357.php" },
-            { name: "Bein Sports 1", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Bein_sport_logo.png/2560px-Bein_sport_logo.png", url: "https://thedaddy.to/embed/stream-171.php" },
-            { name: "Bein Sports 2", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Bein_sport_logo.png/2560px-Bein_sport_logo.png", url: "https://thedaddy.to/embed/stream-172.php" },
-            { name: "ITV 1", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Itv2024.svg/1200px-Itv2024.svg.png", url: "https://thedaddy.to/embed/stream-276.php" },
-            { name: "ITV 2", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Itv2024.svg/1200px-Itv2024.svg.png", url: "https://thedaddy.to/embed/stream-277.php" },
-            { name: "Sky Sports Football", logo: "https://www.sportspro.com/wp-content/uploads/2023/04/Sky_Sports_Logo_September_2020-1.png", url: "https://thedaddy.to/embed/stream-30.php" },
-            { name: "Sky Sports Arena", logo: "https://www.sportspro.com/wp-content/uploads/2023/04/Sky_Sports_Logo_September_2020-1.png", url: "https://thedaddy.to/embed/stream-31.php" },
-            { name: "Sky Sports Action", logo: "https://www.sportspro.com/wp-content/uploads/2023/04/Sky_Sports_Logo_September_2020-1.png", url: "https://thedaddy.to/embed/stream-32.php" },
-            { name: "Sky Sports Main Event", logo: "https://www.sportspro.com/wp-content/uploads/2023/04/Sky_Sports_Logo_September_2020-1.png", url: "https://thedaddy.to/embed/stream-38.php" },
-            { name: "Sky Sports Premier League", logo: "https://www.sportspro.com/wp-content/uploads/2023/04/Sky_Sports_Logo_September_2020-1.png", url: "https://thedaddy.to/embed/stream-39.php" },
-            { name: "TNT Sports 1", logo: "https://logos-world.net/wp-content/uploads/2022/12/TNT-Logo.png", url: "https://thedaddy.to/embed/stream-31.php" },
-            { name: "TNT Sports 2", logo: "https://logos-world.net/wp-content/uploads/2022/12/TNT-Logo.png", url: "https://thedaddy.to/embed/stream-32.php" },
-            { name: "TNT Sports 3", logo: "https://logos-world.net/wp-content/uploads/2022/12/TNT-Logo.png", url: "https://thedaddy.to/embed/stream-33.php" },
-            { name: "USA Network", logo: "https://i.ibb.co/vj5yj2B/Wave.png", url: "https://thedaddy.to/embed/stream-343.php" },
-            { name: "Premier Sports 1", logo: "https://i.ibb.co/vj5yj2B/Wave.png", url: "https://thedaddy.to/embed/stream-451.php" },
-            { name: "Premier Sports 2", logo: "https://i.ibb.co/vj5yj2B/Wave.png", url: "https://thedaddy.to/embed/stream-550.php" }
-        ];
-
-        function displayChannels() {
-            const channelsList = document.getElementById('channels-list');
-            channelsList.innerHTML = '';
-
-            channels.forEach(channel => {
-                const channelDiv = document.createElement('div');
-                channelDiv.className = 'channel-card';
-
-                channelDiv.innerHTML = `
-                    <img src="${channel.logo}" alt="${channel.name}" class="channel-logo">
-                    <h3>${channel.name}</h3>
-                    <button class="watch-button" onclick="showStream('${channel.url}')">Watch Now</button>
-                `;
-
-                channelsList.appendChild(channelDiv);
-            });
-        }
-
-        function toggleChannels() {
-            const channelsList = document.getElementById('channels-list');
-            channelsList.style.display = channelsList.style.display === 'none' ? 'grid' : 'none';
-            if (channelsList.style.display === 'grid') {
-                displayChannels();
             }
         }
 
