@@ -267,10 +267,10 @@
                         const gameDiv = document.createElement('div');
                         gameDiv.className = 'game';
 
-                        gameDiv.innerHTML = 
+                        gameDiv.innerHTML = `
                             <h3>${game.title}</h3>
                             <button class="watch-button" onclick="showStream('${game.link}')">Watch Now</button>
-                        ;
+                        `;
 
                         gamesContainer.appendChild(gameDiv);
                     });
@@ -314,8 +314,7 @@
             { name: "TNT Sports 3", logo: "https://logos-world.net/wp-content/uploads/2022/12/TNT-Logo.png", url: "https://thedaddy.to/embed/stream-33.php" },
             { name: "USA Network", logo: "https://i.ibb.co/vj5yj2B/Wave.png", url: "https://thedaddy.to/embed/stream-343.php" },
             { name: "Premier Sports 1", logo: "https://i.ibb.co/vj5yj2B/Wave.png", url: "https://thedaddy.to/embed/stream-451.php" },
-            { name: "Premier Sports 2", logo: "https://i.ibb.co/vj5yj2B/Wave.png", url: "https://thedaddy.to/embed/stream-550.php" },
-            { name: "Ifollow Stanley", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/b/ba/Accrington_Stanley_F.C._logo.svg/1200px-Accrington_Stanley_F.C._logo.svg.png", url: "https://daddylivehd1.click/embed/stream-181.php" }
+            { name: "Premier Sports 2", logo: "https://i.ibb.co/vj5yj2B/Wave.png", url: "https://thedaddy.to/embed/stream-550.php" }
         ];
 
         function displayChannels() {
@@ -326,11 +325,11 @@
                 const channelDiv = document.createElement('div');
                 channelDiv.className = 'channel-card';
 
-                channelDiv.innerHTML = 
+                channelDiv.innerHTML = `
                     <img src="${channel.logo}" alt="${channel.name}" class="channel-logo">
                     <h3>${channel.name}</h3>
                     <button class="watch-button" onclick="showStream('${channel.url}')">Watch Now</button>
-                ;
+                `;
 
                 channelsList.appendChild(channelDiv);
             });
